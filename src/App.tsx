@@ -2,6 +2,41 @@ import Demo from "./Demo";
 
 const RELEASES = "https://github.com/bmcmbuenviaje/insight-deck-site/releases/latest";
 
+// Replace these with your Stripe Payment Link URLs (Dashboard → Payment Links).
+// A Payment Link is a hosted checkout — no server needed. After payment, email
+// the customer a license key (issued with scripts/superadmin.py license-issue),
+// or wire the online-activation server later.
+const STRIPE_PRO = "https://buy.stripe.com/test_REPLACE_PRO";
+const STRIPE_BUSINESS = "https://buy.stripe.com/test_REPLACE_BUSINESS";
+
+const PLANS: { name: string; price: string; blurb: string; features: string[]; cta: string; href: string; highlight?: boolean }[] = [
+  {
+    name: "Free",
+    price: "$0",
+    blurb: "For individuals getting started.",
+    features: ["Finance & BD module", "Executive overview", "Import CSV / Excel / Parquet", "Export CSV / XLSX / PDF", "Runs fully offline"],
+    cta: "Download",
+    href: RELEASES,
+  },
+  {
+    name: "Pro",
+    price: "$19",
+    blurb: "per month · for operators & small teams.",
+    features: ["Everything in Free", "Ad-Ops & Market Intel", "CFO Tools: multi-currency, AR, forecast, scenario", "SaaS metrics & custom KPIs", "Connectors, scheduled reports & alerts", "Local AI assistant & narratives"],
+    cta: "Start free trial",
+    href: STRIPE_PRO,
+    highlight: true,
+  },
+  {
+    name: "Business",
+    price: "$49",
+    blurb: "per month · for companies.",
+    features: ["Everything in Pro", "Multi-user, roles & audit log", "White-label branding", "Database connectors & data quality", "Multi-entity consolidation", "Priority support"],
+    cta: "Contact / buy",
+    href: STRIPE_BUSINESS,
+  },
+];
+
 const FEATURES = [
   ["Finance & BD", "Revenue, pipeline, margins, collections — mapped from any spreadsheet, no fixed schema."],
   ["Executive Overview", "Gross profit, EBITDA, net burn, and cash runway with trend charts, at a glance."],
@@ -28,7 +63,8 @@ export default function App() {
           <span className="spacer" />
           <a className="hide" href="#demo">Live demo</a>
           <a className="hide" href="#features">Features</a>
-          <a className="hide" href="#why">Why</a>
+          <a className="hide" href="#pricing">Pricing</a>
+          <a className="hide" href="#docs">Docs</a>
           <a className="btn primary" href="#download">Download</a>
         </div>
       </div>
@@ -96,7 +132,48 @@ export default function App() {
         </div>
       </section>
 
-      <section id="download" style={{ background: "var(--soft)" }}>
+      <section id="pricing">
+        <div className="wrap">
+          <h2 className="sec">Simple, honest pricing</h2>
+          <p className="sub">Own the app — no per-seat cloud tax. 14-day Pro trial, no account needed.</p>
+          <div className="grid">
+            {PLANS.map((p) => (
+              <div className="card" key={p.name} style={p.highlight ? { borderColor: "var(--primary)", boxShadow: "0 8px 30px rgba(47,107,255,.12)" } : undefined}>
+                {p.highlight && <span className="pill" style={{ marginBottom: 8, display: "inline-block" }}>Most popular</span>}
+                <h3 style={{ fontSize: 20 }}>{p.name}</h3>
+                <div style={{ fontSize: 30, fontWeight: 800 }}>{p.price}</div>
+                <p style={{ marginBottom: 12 }}>{p.blurb}</p>
+                <ul style={{ paddingLeft: 18, margin: "0 0 16px", color: "var(--muted)", fontSize: 14 }}>
+                  {p.features.map((f) => (
+                    <li key={f} style={{ marginBottom: 4 }}>{f}</li>
+                  ))}
+                </ul>
+                <a className={"btn " + (p.highlight ? "primary" : "ghost")} href={p.href} style={{ width: "100%", textAlign: "center", boxSizing: "border-box" }}>
+                  {p.cta}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="docs" style={{ background: "var(--soft)" }}>
+        <div className="wrap">
+          <h2 className="sec">Get started in 2 minutes</h2>
+          <p className="sub">No servers, no setup.</p>
+          <div className="grid">
+            <div className="card"><h3>1 · Install</h3><p>Download for your platform and run the installer. Everything is bundled — no Python, no database, no Docker.</p></div>
+            <div className="card"><h3>2 · Import</h3><p>Drag a CSV / Excel / Parquet file in, or load the built-in sample datasets. Columns are auto-detected.</p></div>
+            <div className="card"><h3>3 · Explore</h3><p>Open Finance, Executive, and CFO Tools. Map a few columns and your dashboards light up instantly.</p></div>
+          </div>
+          <p className="sub" style={{ marginTop: 20 }}>
+            Everything runs locally in an embedded database. Connect Google Sheets, Stripe, or a Postgres/MySQL database
+            when you want live data, and export to CSV/XLSX/PDF anytime.
+          </p>
+        </div>
+      </section>
+
+      <section id="download">
         <div className="wrap">
           <h2 className="sec">Download &amp; try free</h2>
           <p className="sub">
